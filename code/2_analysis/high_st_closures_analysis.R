@@ -2,7 +2,6 @@ library(tidyverse)
 
 months <- c("06","07","08","09","10","11","12")
 
-# still some cities missing for dec
 dta <- read_csv("data/3_cleaned/dta_dec.csv")
 
 dta_cities <- dta %>%
@@ -48,9 +47,12 @@ dta_last <- dta %>%
   filter(month == max(months)) %>%
   left_join(dta_characteristics %>% select(id,reviews_06_2020,average_review_06_2020), by="id")
 
-ggplot(data = dta_last,
-       aes(x=status, y=average_review_06_2020)) +
+ggplot(data = dta_last %>% filter(master_category == "restaurants"),
+       aes(x=status, y=reviews_06_2020)) +
   geom_boxplot()
+
+View( dta_last %>% group_by(city,status) %>% summarise(avg_review = mean(average_review_06_2020,na.rm=T)) )
+dta_last %>% group_by(status) %>% summarise(n_reviews = mean(reviews_06_2020,na.rm=T))
 
 
 # - - - UK

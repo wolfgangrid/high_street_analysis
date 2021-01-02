@@ -14,3 +14,5 @@ which `calls code/1_data_cleaning/high_st_closures_data_cleaning_city.R`
 - definition of permanently closed: shows as permanently closed in month t and then either (i) in all subsequent months also shows as permanently closed or (ii) is not found anymore some time after first shown as permanently closed
 
 
+code/1_data_cleaning/high_st_closures_data_cleaning_all.R
+- calls `code/1_data_cleaning/high_st_closures_data_cleaning_city.R` for each city

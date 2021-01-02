@@ -1,4 +1,6 @@
 
+library(tidyverse)
+
 cities <- c("berlin","detroit","glasgow","la","london","madrid","manchester","milan","newcastle","nyc","paris","rome","stockholm")
 first_month <- "06"
 
@@ -11,9 +13,10 @@ get_characteristics_city <- function(data_city) {
 dta_chracteristics <- data.frame()
 for(city in cities) {
   dta_city <- read_csv(paste0("data/1_raw/",city,"_",first_month,"_2020.csv"))
-  dta_chracteristics_city <- get_characteristics_city(dta_city)
+  dta_chracteristics_city <- get_characteristics_city(dta_city) %>% mutate(city = city)
   dta_chracteristics <- bind_rows(dta_chracteristics,dta_chracteristics_city)
 }
+rm(city,dta_chracteristics_city,dta_city)
 
 write_csv(dta_chracteristics,"data/3_cleaned/dta_chracteristics.csv")
 
@@ -39,9 +42,27 @@ first_month <- "06"
 dta_chracteristics_uk <- data.frame()
 for(city in cities_uk) {
   dta_city <- read_csv(paste0("data/1_raw/",city,"_",first_month,"_2020.csv"))
-  dta_chracteristics_city <- get_characteristics_city_uk(dta_city)
+  dta_chracteristics_city <- get_characteristics_city_uk(dta_city) %>% mutate(city = city)
   dta_chracteristics_uk <- bind_rows(dta_chracteristics_uk,dta_chracteristics_city)
 }
+rm(city,dta_chracteristics_city,dta_city)
 
-write_csv(dta_chracteristics_uk,"data/3_cleaned/dta_chracteristics_uk.csv")
+# load postcode data
+england_postcodes_data <- read_csv("data/2_auxilliary_data/England postcodes.csv")
+scotland_postcodes_data <- read_csv("data/2_auxilliary_data/Scotland postcodes.csv")
+
+uk_postcodes <- england_postcodes_data %>%
+  select(Postcode,Longitude,Latitude,County,District,Ward) %>%
+  bind_rows(scotland_postcodes_data %>% select(Postcode,Longitude,Latitude,County,District,Ward)) %>%
+  rename_with(tolower)
+
+#rm(england_postcodes_data,scotland_postcodes_data)
+
+#join to uk characteristics data
+dta_chracteristics_uk2 <- dta_chracteristics_uk %>%
+  left_join(uk_postcodes, by="postcode") %>%
+  mutate(postcode = case_when(!is.na(longitude) ~ postcode)) # keep only postcodes in official list
+
+
+write_csv(dta_chracteristics_uk2,"data/3_cleaned/dta_chracteristics_uk.csv")
 
