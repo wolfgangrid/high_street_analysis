@@ -4,7 +4,7 @@ months <- c("06","07","08","09","10","11","12")
 
 #cities <- c("berlin","detroit","glasgow","la","london","madrid","manchester","milan","newcastle","nyc","paris","rome","stockholm")
 #cities <- c("london","manchester","newcastle","edinburgh","glasgow","berlin","madrid","rome","paris")
-cities <- c("berlin","glasgow","la","london","madrid","manchester","milan","newcastle","nyc","paris","rome","stockholm")
+cities <- c("berlin","edinburgh","glasgow","la","london","madrid","manchester","milan","newcastle","nyc","paris","rome","stockholm")
 
 dta_long <- data.frame()
 for(city in cities) {

@@ -80,7 +80,27 @@ shp_boroughs2 <- shp_boroughs %>%
   left_join(dta_boroughs)
 
 london_map <- ggplot() + geom_sf(data=shp_boroughs2, aes(colour = temporarily_closed,fill = temporarily_closed))
+london_map <- london_map + ggtitle("Share of Temporarily Closed Restaurants \n by London Boroughs")
 print(london_map)
 
-london_map <- ggplot() + geom_sf(data=shp_boroughs2, aes(colour = permanently_closed,fill = permanently_closed))
+ggsave(
+  "output/london_boroughs_restaurants_temporarily_closed.png",
+  london_map,
+  width = 3.25,
+  height = 3.25,
+  dpi = 1200
+)
+
+png("output/london_boroughs_restaurants_temporarily_closed.png", width = 20, height=20, units="cm", res=400)
 print(london_map)
+dev.off()
+
+
+
+london_map <- ggplot() + geom_sf(data=shp_boroughs2, aes(colour = permanently_closed,fill = permanently_closed))
+london_map <- london_map + ggtitle("Share of Permanently Closed Restaurants \n by London Boroughs")
+print(london_map)
+
+png("output/london_boroughs_restaurants_permanently_closed.png", width = 20, height=20, units="cm", res=400)
+print(london_map)
+dev.off()

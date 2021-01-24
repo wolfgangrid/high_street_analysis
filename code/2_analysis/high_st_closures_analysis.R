@@ -22,11 +22,34 @@ ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
             aes(x=month,y=permanently_closed,label=city), show.legend = FALSE)
 
 
-ggplot(data = dta_cities,
-       aes(x=month,y=permanently_closed,group=interaction(city,master_category),colour=master_category)) + geom_line()
+p1 <- ggplot(data = dta_cities,
+             aes(x=month,y=temporarily_closed,group=interaction(city,master_category),colour=master_category)) +
+  geom_line() +
+  ylim(0,0.4) +
+  theme(legend.position = "none",
+        text = element_text(size=14),
+        aspect.ratio=8/10) +
+  ggtitle("Temporarily Closed") +
+  xlab("Month") +
+  ylab("")
 
-ggplot(data = dta_cities,
-       aes(x=month,y=temporarily_closed,group=interaction(city,master_category),colour=master_category)) + geom_line()
+p1
+
+p2 <- ggplot(data = dta_cities,
+             aes(x=month,y=permanently_closed,group=interaction(city,master_category),colour=master_category)) +
+  geom_line() +
+  ylim(0,0.1) +
+  theme(legend.position = c(0.15,0.9),
+        text = element_text(size=14),
+        aspect.ratio=8/10) +
+  ggtitle("Permanently Closed") +
+  xlab("Month") +
+  ylab("")
+
+png("output/restaurants_vs_shops.png", width = 40, height=20, units="cm", res=400)
+grid.arrange(p1,p2, nrow=1)
+dev.off()
+
 
 dta_cities_wider <- dta_cities %>%
   select(-temporarily_closed) %>%
@@ -47,12 +70,8 @@ dta_last <- dta %>%
   filter(month == max(months)) %>%
   left_join(dta_characteristics %>% select(id,reviews_06_2020,average_review_06_2020), by="id")
 
-ggplot(data = dta_last %>% filter(master_category == "restaurants"),
-       aes(x=status, y=reviews_06_2020)) +
-  geom_boxplot()
-
-View( dta_last %>% group_by(city,status) %>% summarise(avg_review = mean(average_review_06_2020,na.rm=T)) )
 dta_last %>% group_by(status) %>% summarise(n_reviews = mean(reviews_06_2020,na.rm=T))
+dta_last %>% group_by(status) %>% summarise(n_reviews = mean(average_review_06_2020,na.rm=T))
 
 
 # - - - UK
