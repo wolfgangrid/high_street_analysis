@@ -39,14 +39,14 @@ p2 <- ggplot(data = dta_cities,
              aes(x=month,y=permanently_closed,group=interaction(city,master_category),colour=master_category)) +
   geom_line() +
   ylim(0,0.1) +
-  theme(legend.position = c(0.15,0.9),
+  theme(legend.position = c(0.3,0.8),
         text = element_text(size=14),
         aspect.ratio=8/10) +
   ggtitle("Permanently Closed") +
   xlab("Month") +
   ylab("")
 
-png("output/restaurants_vs_shops.png", width = 40, height=20, units="cm", res=400)
+png("output/restaurants_vs_shops.png", width = 20, height=10, units="cm", res=400)
 grid.arrange(p1,p2, nrow=1)
 dev.off()
 
