@@ -1,0 +1,10 @@
+name: high-street-app
+title:
+username:
+account: wolfgangrid
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3551160
+bundleId: 4160910
+url: https://wolfgangrid.shinyapps.io/high-street-app/
+when: 1612019428.68572

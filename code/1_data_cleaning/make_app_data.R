@@ -1,6 +1,6 @@
 library(tidyverse)
 
-months <- c("06","07","08","09","10","11","12")
+months <- read_csv("data/months.csv", col_names = FALSE) %>% pull()
 
 dta <- read_csv("data/3_cleaned/dta_dec.csv")
 
@@ -11,4 +11,11 @@ dta_cities <- dta %>%
   ungroup() %>%
   pivot_longer(cols=c(temporarily_closed,permanently_closed), names_to = "status", values_to = "frac_closed")
 
-cities <- unique(dta_cities$city)
+#cities <- unique(dta_cities$city)
+
+rm(dta)
+
+write.csv(dta_cities,"high-street-app/dta_app.csv")
+
+#save.image("~/Projects/high_street_analysis/app/high_st_app_data.RData")
+

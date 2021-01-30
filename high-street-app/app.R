@@ -1,3 +1,14 @@
+library(shiny)
+library(tidyverse)
+
+# data set from code/1_data_cleaning/make_app_data.R
+dta_cities <- read.csv("dta_app.csv")
+cities <- unique(dta_cities$city)
+months <- unique(dta_cities$month)
+
+#source("./ui.R")
+#source("./server.R")
+
 ui <- fluidPage(
   
   title = "High Street Closures",
@@ -37,10 +48,30 @@ ui <- fluidPage(
            checkboxGroupInput("cities_choice", label = NULL,
                               choices = cities,
                               selected = cities, inline = FALSE)
-           ),
+    ),
     column(10,
            #textOutput("print_cities"),
            plotOutput("perm_closures_plot")
-           )
+    )
   )
 )
+
+server <- function(input, output, session) {
+  
+  output$print_cities <- renderText({
+    input$cities_choice
+  })
+  
+  output$perm_closures_plot <- renderPlot({
+    ggplot(data = dta_cities %>% filter(city %in% input$cities_choice,
+                                        master_category == input$master_category,
+                                        status == input$input_main),
+           aes(x=month,y=frac_closed,group=city,colour=city)) +
+      geom_line() #+
+    #ylim(0,0.4)
+    
+    
+  })
+}
+
+shinyApp(ui, server)

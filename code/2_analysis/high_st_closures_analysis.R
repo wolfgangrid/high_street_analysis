@@ -1,4 +1,5 @@
 library(tidyverse)
+library(gridExtra)
 
 months <- c("06","07","08","09","10","11","12")
 
@@ -39,12 +40,15 @@ p2 <- ggplot(data = dta_cities,
              aes(x=month,y=permanently_closed,group=interaction(city,master_category),colour=master_category)) +
   geom_line() +
   ylim(0,0.1) +
-  theme(legend.position = c(0.3,0.8),
+  theme(legend.justification = c(-0.05, -1.7),
+        legend.position = c(0,0),
         text = element_text(size=14),
         aspect.ratio=8/10) +
   ggtitle("Permanently Closed") +
   xlab("Month") +
   ylab("")
+
+p2
 
 png("output/restaurants_vs_shops.png", width = 20, height=10, units="cm", res=400)
 grid.arrange(p1,p2, nrow=1)
@@ -76,3 +80,4 @@ dta_last %>% group_by(status) %>% summarise(n_reviews = mean(average_review_06_2
 
 # - - - UK
 dta_characteristics_uk <- read_csv("data/3_cleaned/dta_chracteristics_uk.csv")
+
