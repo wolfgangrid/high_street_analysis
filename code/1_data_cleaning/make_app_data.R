@@ -15,7 +15,7 @@ dta_cities <- dta %>%
 
 rm(dta)
 
-write.csv(dta_cities,"high-street-app/dta_app.csv")
+write.csv(dta_cities,"high-street-app/dta_app.csv", row.names = FALSE)
 
 #save.image("~/Projects/high_street_analysis/app/high_st_app_data.RData")
 

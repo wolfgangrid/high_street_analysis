@@ -1,7 +1,7 @@
 library(tidyverse)
 library(gridExtra)
 
-months <- c("06","07","08","09","10","11","12")
+months <- read_csv("data/months.csv", col_names = FALSE) %>% pull()
 
 dta <- read_csv("data/3_cleaned/dta_dec.csv")
 
@@ -13,34 +13,36 @@ dta_cities <- dta %>%
 
 
 
-ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
-       aes(x=month,y=temporarily_closed,group=city,colour=city)) + geom_line()
+#ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
+#       aes(x=month,y=temporarily_closed,group=city,colour=city)) + geom_line()
   
 
-ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
-       aes(x=month,y=permanently_closed,group=city,colour=city)) + geom_line() +
-  geom_text(data=dta_cities %>% filter(master_category == "restaurants", month==max(months)),
-            aes(x=month,y=permanently_closed,label=city), show.legend = FALSE)
+#ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
+#       aes(x=month,y=permanently_closed,group=city,colour=city)) + geom_line() +
+#  geom_text(data=dta_cities %>% filter(master_category == "restaurants", month==max(months)),
+#            aes(x=month,y=permanently_closed,label=city), show.legend = FALSE)
 
 
 p1 <- ggplot(data = dta_cities,
              aes(x=month,y=temporarily_closed,group=interaction(city,master_category),colour=master_category)) +
   geom_line() +
   ylim(0,0.4) +
-  theme(legend.position = "none",
+  theme(plot.title = element_text(size = 16),
+        legend.position = "none",
         text = element_text(size=14),
         aspect.ratio=8/10) +
   ggtitle("Temporarily Closed") +
   xlab("Month") +
   ylab("")
 
-p1
+#p1
 
 p2 <- ggplot(data = dta_cities,
              aes(x=month,y=permanently_closed,group=interaction(city,master_category),colour=master_category)) +
   geom_line() +
   ylim(0,0.1) +
-  theme(legend.justification = c(-0.05, -1.7),
+  theme(plot.title = element_text(size = 16),
+        legend.justification = c(-0.05, -1.7),
         legend.position = c(0,0),
         text = element_text(size=14),
         aspect.ratio=8/10) +
@@ -48,12 +50,50 @@ p2 <- ggplot(data = dta_cities,
   xlab("Month") +
   ylab("")
 
-p2
+#p2
 
 png("output/restaurants_vs_shops.png", width = 20, height=10, units="cm", res=400)
 grid.arrange(p1,p2, nrow=1)
 dev.off()
 
+for(cat in c("restaurants","shopping")) {
+  
+  p1 <- ggplot(data = dta_cities %>% filter(city %in% c("stockholm","london","paris","berlin"),
+                                               master_category == cat)) +
+    geom_line(aes(x=month,y=temporarily_closed,group=city,colour=city)) +
+    theme(plot.title = element_text(size = 16),
+          legend.position = "none",
+          text = element_text(size=14),
+          aspect.ratio=8/10) +
+    ggtitle(paste0("Temporarily Closed ",cat)) +
+    xlab("Month") +
+    ylab("")
+
+#p1
+
+  p2 <- ggplot(data = dta_cities %>% filter(city %in% c("stockholm","london","paris","berlin"),
+                                                 master_category == cat)) +
+    geom_line(aes(x=month,y=permanently_closed,group=city,colour=city)) +
+    theme(plot.title = element_text(size = 16),
+          legend.justification = c(-0.05, -0.8),
+          legend.position = c(0,0),
+          text = element_text(size=14),
+          aspect.ratio=8/10) +
+    ggtitle(paste0("Permanently Closed ",cat)) +
+    xlab("Month") +
+    ylab("")
+
+#p2
+
+  png(paste0("output/temp_vs_perm_",cat,".png"), width = 20, height=10, units="cm", res=400)
+  grid.arrange(p1,p2, nrow=1)
+  dev.off()
+}
+
+  
+
+
+# # # 
 
 dta_cities_wider <- dta_cities %>%
   select(-temporarily_closed) %>%

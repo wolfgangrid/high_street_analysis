@@ -5,6 +5,6 @@ account: wolfgangrid
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3551160
-bundleId: 4160910
+bundleId: 4177577
 url: https://wolfgangrid.shinyapps.io/high-street-app/
-when: 1612019428.68572
+when: 1612386047.12714

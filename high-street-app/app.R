@@ -67,8 +67,12 @@ server <- function(input, output, session) {
                                         master_category == input$master_category,
                                         status == input$input_main),
            aes(x=month,y=frac_closed,group=city,colour=city)) +
-      geom_line() #+
-    #ylim(0,0.4)
+      geom_line() +
+      xlab("Month") +
+      ylab("") +
+      scale_x_continuous(breaks = as.numeric(months)) +
+      theme(text = element_text(size=14),
+            aspect.ratio=8/10)
     
     
   })
