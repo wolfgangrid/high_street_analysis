@@ -1,6 +1,71 @@
 library(tidyverse)
 library(gridExtra)
 
+dta <- read_csv("data/3_cleaned/dta_jan.csv")
+
+dta_cities <- dta %>%
+  group_by(city,master_category,month,year) %>%
+  summarise(temporarily_closed = mean(status == "temporarily_closed"),
+            permanently_closed = mean(status == "permanently_closed")) %>%
+  ungroup() %>%
+  arrange(city,year,month)
+
+ggplot(data = dta_cities %>% filter(master_category == "shopping"),
+       aes(x=reorder(month,year),y=temporarily_closed,group=city,colour=city)) + geom_line() +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
+       aes(x=reorder(month,year),y=temporarily_closed,group=city,colour=city)) + geom_line() +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
+       aes(x=reorder(month,year),y=permanently_closed,group=city,colour=city)) + geom_line() +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggplot(data = dta_cities %>% filter(master_category == "shopping"),
+       aes(x=reorder(month,year),y=permanently_closed,group=city,colour=city)) + geom_line() +
+  theme(axis.text.x = element_text(angle = 90))
+
+p1 <- ggplot(data = dta_cities %>% filter(master_category == "shopping"),
+             aes(x=reorder(month,year),y=temporarily_closed,
+                 group=city,
+                 colour=city)) +
+  geom_line() +
+  ylim(0,0.4) +
+  theme(plot.title = element_text(size = 16),
+        legend.position = "none",
+        text = element_text(size=14),
+        aspect.ratio=8/10) +
+  ggtitle("Temporarily Closed Shops") +
+  xlab("Month") +
+  ylab("")
+
+p2 <- ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
+             aes(x=reorder(month,year),y=temporarily_closed,
+                 group=city,
+                 colour=city)) +
+  geom_line() +
+  ylim(0,0.4) +
+  theme(plot.title = element_text(size = 16),
+        legend.justification = c(-0.05, -1.2),
+        legend.position = c(0,0),
+        text = element_text(size=14),
+        aspect.ratio=8/10) +
+  ggtitle("Temporarily Closed Restaurants") +
+  xlab("Month") +
+  ylab("")
+
+p1
+p2
+
+png("output/temp_closed_2021_01.png", width = 20, height=10, units="cm", res=400)
+grid.arrange(p1,p2, nrow=1)
+dev.off()
+
+
+# ----
+# 2020 Data
+# ----
 months <- read_csv("data/months.csv", col_names = FALSE) %>% pull()
 
 dta <- read_csv("data/3_cleaned/dta_dec.csv")

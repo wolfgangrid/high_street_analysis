@@ -1,16 +1,14 @@
 library(tidyverse)
 
-#months <- c("06","07","08","09","10","11","12")
-#city <- "london"
-
-dta <- lapply(months, function(m) read_csv(paste0("data/1_raw/",city,"_",m,"_2020.csv")))
+dta <- lapply(months, function(m) read_csv(paste0("data/1_raw/",city,"_",m,".csv")))
 names(dta) <- months
 
-dta1 <- dta[["06"]][ ,c("id","master_category","name","name_06_2020","address_06_2020","status_06_2020")]
-for(m in months[2:length(months)]) {
-  dta1 <- merge(dta1, dta[[m]][ ,c("id",paste0("name_",m,"_2020"),paste0("status_",m,"_2020"))], by="id", all.x=T)  
+dta1 <- dta[["06_2020"]][ ,c("id","master_category","name","name_06_2020","address_06_2020","status_06_2020")]
+months2 <- months[which(months != "06_2020")]
+for(m in months2) {
+  dta1 <- merge(dta1, dta[[m]][ ,c("id",paste0("name_",m),paste0("status_",m))], by="id", all.x=T)  
 }
-rm(m)
+rm(m,months2)
 
 # drop those where name is not the same across months (prob found the wrong establishment)
 # and pivot to long format
@@ -24,15 +22,13 @@ dta_names <- dta1 %>%
   filter(name_month != "not_found") %>%
   select(-n_names) %>%
   # complete months
-  mutate(month = str_remove(month,"_2020")) %>%
   complete(month = months) %>%
   ungroup()
 
 # get status data in long format
 dta_status <- dta1 %>%
   select(id,master_category,name,starts_with("status_")) %>%
-  pivot_longer(cols = starts_with("status_"), names_to = "month", names_prefix = "status_", values_to = "status") %>%
-  mutate(month = str_remove(month,"_2020"))
+  pivot_longer(cols = starts_with("status_"), names_to = "month", names_prefix = "status_", values_to = "status")
 
 # past together names and status in long format
 dta2 <- dta_names %>%
@@ -42,6 +38,10 @@ dta2 <- dta_names %>%
 rm(dta_names,dta_status)
 
 dta3 <- dta2 %>%
+  rename(month_year = month) %>%
+  mutate(year = as.numeric(sapply(month_year, function(i) str_split(i,"_")[[1]][2]))) %>%
+  mutate(month = as.numeric(sapply(month_year, function(i) str_split(i,"_")[[1]][1]))) %>%
+  arrange(id,year,month) %>%
   group_by(id,master_category,name) %>%
   mutate(lag_status = lag(status)) %>%
   mutate(lead_status = lead(status)) %>%
@@ -63,7 +63,7 @@ dta4 <- dta3 %>%
 
 # drop if already permanently closed at beginning of sample
 dta5 <- dta4 %>%
-  mutate(closed_06 = (status == "permanently_closed" & month == "06" )) %>%
+  mutate(closed_06 = (status == "permanently_closed" & month_year == "06_2020" )) %>%
   group_by(id) %>%
   mutate(closed_at_start = any(closed_06 == TRUE)) %>%
   filter(closed_at_start == FALSE) %>%
@@ -80,7 +80,11 @@ dta5 <- dta4 %>%
   select(-status,-lead_status,-status1,-resurrected) %>%
   rename(status = status2)
 
-dta_city <- dta5
-dta_city$city <- city
+dta_city <- dta5 %>%
+  #mutate(year = substr(month, 4, 8)) %>%
+  mutate(city = city) %>%
+  arrange(id,year,month)
 
 rm(dta,dta1,dta2,dta3,dta4,dta5)
+
+
