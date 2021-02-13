@@ -3,7 +3,19 @@
 This project aims to document the temporary and permanent closures of shops and restaurants over the course of the Corona virus pandemic.
 To do so we are collecting data from major cities in Europe and in the US.
 
-## Explore the data here:
+As the following graph shows, temporary closures track the respective lockdowns well, coming down over the summer and into fall but then going back up in the winter. In London one can see the November and January lockdowns with a pause in December, in Germany shops were ordered to close
+only a few days before Christmas, which we capture in our data only in January.
+
+The graph shows the share of shops and restaurants that are temporarily closed in any given month.
+
+![Temporary Closures](output/temp_closed_2021_01.png)
+
+We also detect permanent closures, which by definition continue to track higher over time.
+The graph shows again the share of shops and restaurants that are permanently closed in any given month.
+
+![Temporary Closures](output/perm_closed_2021_01.png)
+
+## Explore the data for yourself here:
 
 <iframe scrolling="no" frameborder="no" src="https://wolfgangrid.shinyapps.io/high-street-app/" class="l-screen-inset shaded" style="width:800px;height: 100vh;"></iframe>
 
