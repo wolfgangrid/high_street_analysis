@@ -55,10 +55,45 @@ p2 <- ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
   xlab("Month") +
   ylab("")
 
+#p1
+#p2
+png("output/temp_closed_2021_01.png", width = 20, height=10, units="cm", res=400)
+grid.arrange(p1,p2, nrow=1)
+dev.off()
+
+p1 <- ggplot(data = dta_cities %>% filter(master_category == "shopping"),
+             aes(x=reorder(month,year),y=permanently_closed,
+                 group=city,
+                 colour=city)) +
+  geom_line() +
+  ylim(0,0.04) +
+  theme(plot.title = element_text(size = 16),
+        legend.position = "none",
+        text = element_text(size=14),
+        aspect.ratio=8/10) +
+  ggtitle("Temporarily Closed Shops") +
+  xlab("Month") +
+  ylab("")
+
+p2 <- ggplot(data = dta_cities %>% filter(master_category == "restaurants"),
+             aes(x=reorder(month,year),y=permanently_closed,
+                 group=city,
+                 colour=city)) +
+  geom_line() +
+  ylim(0,0.04) +
+  theme(plot.title = element_text(size = 16),
+        legend.justification = c(-0.05, -1.2),
+        legend.position = c(0,0),
+        text = element_text(size=14),
+        aspect.ratio=8/10) +
+  ggtitle("Temporarily Closed Restaurants") +
+  xlab("Month") +
+  ylab("")
+
 p1
 p2
 
-png("output/temp_closed_2021_01.png", width = 20, height=10, units="cm", res=400)
+png("output/perm_closed_2021_01.png", width = 20, height=10, units="cm", res=400)
 grid.arrange(p1,p2, nrow=1)
 dev.off()
 

@@ -15,7 +15,7 @@ The graph shows again the share of shops and restaurants that are permanently cl
 
 ![Temporary Closures](output/perm_closed_2021_01.png)
 
-## Explore the data for yourself here:
+## Explore more cities here:
 
 <iframe scrolling="no" frameborder="no" src="https://wolfgangrid.shinyapps.io/high-street-app/" class="l-screen-inset shaded" style="width:800px;height: 100vh;"></iframe>
 
