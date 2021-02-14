@@ -19,13 +19,14 @@ The graph shows again the share of shops and restaurants that are permanently cl
 
 <iframe scrolling="no" frameborder="no" src="https://wolfgangrid.shinyapps.io/high-street-app/" class="l-screen-inset shaded" style="width:800px;height: 100vh;"></iframe>
 
+## Locations of Closures in London:
+
 We also observe the location of shops and restaurants, allowing us to see where in each city
 closures have been concentrated. As the map below for London shows, temporary closures,
 especially of restaurants, have been concentrated in the centre of the city.
 This is less the case for permanent closures.
 
 <iframe scrolling="no" frameborder="no" src="https://wolfgangrid.shinyapps.io/high-street-app-maps/" class="l-screen-inset shaded" style="width:800px;height: 100vh;"></iframe>
-
 
 ## Some observations:
 
